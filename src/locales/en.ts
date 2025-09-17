@@ -1,13 +1,13 @@
 export default {
-  welcome: '🙋‍♂ Hello, {name}!\n💰 Your balance - {balance}₽.',
+  welcome: '🙋‍♂ Hello, {name}!\n💰 Your balance - {balance}$.',
   choose_language: '🌍 Choose language:',
   language_changed: 'Language has been changed to English',
     // Cart messages
   cart_empty: '🛒 Your cart is empty',
   cart_header: '➤ Select UC to purchase (multiple allowed)',
   cart: '🛒 Your cart:',
-  cart_item: '➥ {label} UC × {count} = {price}₽',
-  cart_total: '✦ Total: {total}₽',
+  cart_item: '➥ {label} UC × {count} = {price}$',
+  cart_total: '✦ Total: {total}$',
   premium_select: '➤ Select Premium duration',
   item_added: '✅ {label} added to cart',
   cart_cleared: '🗑 Cart cleared',
@@ -33,7 +33,7 @@ export default {
   enter_pubg_id: '✦ Send your game ID for product delivery!',
   enter_telegram_stars_tag: '✦ Send account tag to receive stars ({amount})',
   enter_telegram_tag: '✦ Send account tag for Telegram Premium ({label})',
-  enter_stars_amount: `1⭐️ = {price}₽. Enter how many stars you want to buy:`,
+  enter_stars_amount: `1⭐️ = {price}$. Enter how many stars you want to buy:`,
   enter_deposit_amount: 'Enter the amount you want to top up your balance with:',
   enter_new_credentials: 'Enter new details for {method}:',
   enter_user_id: 'Enter user ID whose balance you want to change:',
@@ -53,20 +53,20 @@ export default {
   order_confirmed: '✅ Your order has been confirmed',
   order_pending: '✅ ID successfully sent, awaiting confirmation',
   new_order: '✅ New order #{orderNumber}',
-  order_details: '🛍 Products:\n{items}\n💵 Amount: {total}₽\n👤 User: {username} (ID: {userId})',
+  order_details: '🛍 Products:\n{items}\n💵 Amount: {total}$\n👤 User: {username} (ID: {userId})',
   order_completed: '✅ Order completed',
   order_cancelled: '❌ Order cancelled',
   order_rejected: '⛔️ Your order has been rejected, contact administrator for details',
-  premium_order_created: 'Your {label} Telegram Premium order for {price}₽ to account {tag} has been sent to administrator. Awaiting processing',
+  premium_order_created: 'Your {label} Telegram Premium order for {price}$ to account {tag} has been sent to administrator. Awaiting processing',
 
   // Payments
   payment_confirmed: '✅ Transaction {amount} {currency} confirmed\nID: {userId}\nNew balance: {balance}',
-  balance_updated: '💳 Your balance has been topped up by {amount}₽\nCurrent balance: {balance}₽',
-  deposit_instructions: '<b>➤ByBit UID - <code>{uid}</code> \n ▫️Send {amount}₽ to the ID above, after payment send a screenshot!</b>',
+  balance_updated: '💳 Your balance has been topped up by {amount}$\nCurrent balance: {balance}$',
+  deposit_instructions: '<b>➤ByBit UID - <code>{uid}</code> \n ▫️Send {amount}$ to the ID above, after payment send a screenshot!</b>',
   deposit_request_sent: 'Receipt received and sent to administrator for verification. Await confirmation.',
-  new_deposit_request: '🆕 Balance top-up request\n👤 User: {userTag} (ID: {userId})\n💵 Amount: {amount}₽\n📅 Time: {time}',
-  deposit_confirmed: 'Top-up of {amount}₽ for {userTag} (ID: {userId}) confirmed.',
-  deposit_rejected: 'Top-up of {amount}₽ for {userTag} (ID: {userId}) rejected.',
+  new_deposit_request: '🆕 Balance top-up request\n👤 User: {userTag} (ID: {userId})\n💵 Amount: {amount}$\n📅 Time: {time}',
+  deposit_confirmed: 'Top-up of {amount}$ for {userTag} (ID: {userId}) confirmed.',
+  deposit_rejected: 'Top-up of {amount}$ for {userTag} (ID: {userId}) rejected.',
 
   // Admin panel
   admin_welcome: 'Welcome to Admin Panel!',
@@ -77,7 +77,7 @@ export default {
   codes_added: '✅ Added {count} codes for {productLabel} UC',
   code_deleted: '✅ Code {codeToDelete} successfully deleted',
   credentials_updated: '✅ {method} details successfully updated!',
-  balance_changed: 'Balance for user ID {userId} has been changed to {balance}₽.',
+  balance_changed: 'Balance for user ID {userId} has been changed to {balance}$.',
   admin_added: 'User with ID {adminId} added as administrator.',
   admin_exists: 'User with ID {adminId} is already an administrator.',
   admin_removed: 'User with ID {adminId} has been removed from administrators.',
@@ -95,7 +95,7 @@ export default {
   profile_info: [
     '<b>✦ Your profile!',
     '👤User : <code>{userId}</code>',
-    '💳Balance : <u>{balance}₽</u></b>'
+    '💳Balance : <u>{balance}$</u></b>'
   ].join('\n'),
 
   // Order history
@@ -104,7 +104,7 @@ export default {
     '🆔 Order #{orderId}',
     '📅 Date: {date}',
     '🛍 Products: {count}',
-    '💵 Amount: {total}₽',
+    '💵 Amount: {total}$',
     '📊 Status: {statusEmoji} {status}',
     '{details}'
   ].join('\n'),

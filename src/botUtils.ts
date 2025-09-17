@@ -1,9 +1,11 @@
 import { GrammyError, InlineKeyboard } from "grammy";
-import { DEPOSIT_GROUP_ID, getAdmins, getProductsPremium, getProductsCodes, ORDERS_GROUP_ID, getProductsPromo, setProductsCodes, setProductsPremium, setProductsPromo, getUserBalance, deleteUser, database, CRYPTOBOT_ID, getCryptobotDeposits, setUserBalance, deleteCryptobotDeposits, refs, getAllUsers,  getCodes, deleteCodes, activatorApi, fragmentApi } from "./globals.js";
+import { DEPOSIT_GROUP_ID, getAdmins, getProductsPremium, getProductsCodes, ORDERS_GROUP_ID, getProductsPromo, setProductsCodes, setProductsPremium, setProductsPromo, getUserBalance, deleteUser, database, CRYPTOBOT_ID, getCryptobotDeposits, setUserBalance, deleteCryptobotDeposits, refs, getAllUsers,  getCodes, deleteCodes, activatorApi, fragmentApi, BYBIT_SECRET, BYBIT_API_KEY, getPaymentDetails, BYBIT_API_URL } from "./globals.js";
 import { Cart, MyContext, Order, Product, Code } from "./types.js";
 import { cancelKeyboard, generateShopKeyboard, mainKeyboard, returnKeyboard, toMenuKeyboard } from "./keyboards.js";
 import { bot } from "./index.js";
 import { getCurrentTranslations } from "./locales/manager.js";
+import * as crypto from "crypto"
+import axios from "axios";
 
 export function isAdmin(chatId: number): boolean {
   return getAdmins()[chatId.toString()] === true;
@@ -186,7 +188,7 @@ export async function processCryptoBotMessage(ctx: MyContext): Promise<void> {
   const messageText = ctx.msg.text;
   const lines = messageText.split(' ');
   const senderIndex = lines.findIndex(line => line === 'отправил(а)');
-  
+
   if (senderIndex === -1 || senderIndex + 2 >= lines.length || lines[senderIndex + 1] !== '🪙') {
     await ctx.api.sendMessage(DEPOSIT_GROUP_ID, ctx.t('parse_error'));
     return;
@@ -348,7 +350,7 @@ export async function purchaseCodes(ctx: MyContext): Promise<void> {
   const orderText = ctx.t('new_order', { orderNumber }) + '\n' +
     ctx.t('user') + ': ' + `${firstName} ${lastName} (ID: ${chatId})\n` +
     ctx.t('codes') + ':\n\n' + codesMessage + 
-    ctx.t('total') + ': ' + `${cart.total}₽`;
+    ctx.t('total') + ': ' + `${cart.total}$`;
 
   sendOrderRequest(orderText);
 };
@@ -429,6 +431,7 @@ export async function handlePubgIdInput(ctx: MyContext, text: string): Promise<v
           ctx.api.sendMessage(chatId, ctx.t("order_error"), {
             reply_markup: returnKeyboard(chatId)
           });
+          console.log(error);
 
           return;
         }
@@ -587,7 +590,6 @@ export async function sendBroadcastMessage(ctx: MyContext, broadcastMessage: str
   });
 };
 
-// Добавьте в botUtils.js
 export async function purchaseStars(userTag: string, starsAmount: number, userId: number): Promise<boolean> {
   try {
     const response = await fragmentApi.post('/order/stars', {
@@ -605,5 +607,68 @@ export async function purchaseStars(userTag: string, starsAmount: number, userId
   } catch (error: any) {
     console.error('Fragment purchase error:', error.response?.data || error.message);
     return false;
+  }
+};
+
+function generateSignature (timestamp: string, recvWindow: number, parameters: string): string {
+  return crypto.createHmac('sha256', BYBIT_SECRET).update(timestamp + BYBIT_API_KEY + recvWindow + parameters).digest('hex');
+};
+
+export async function createBybitPayment (userId: number | string, orderAmount: number) {
+  const timestamp = Date.now()
+  const bybitOrder = `bybit-order_${userId}_${timestamp.toString(36).toUpperCase}`;
+
+  const envParams = {
+    terminalType: "WEB", 
+    device: `tg_device_${userId}`,
+    browserVersion: "Mozilla/5.0 (compatible; TelegramBot/1.0)",
+    ip: "109.252.189.23"
+  };
+
+  const parameters = {
+    merchantId: getPaymentDetails().ByBit,
+    merchantName: "Roni",
+    paymentType: "E_COMMERCE",
+    merchantTradeNo: bybitOrder,
+    goods: [
+      {
+        "shoppingName": "Roni",
+        "goodsName": "Пополнение баланса"
+      }
+    ],
+    orderAmount: orderAmount.toString(),
+    currency: "USDT",
+    currencyType: "crypto",
+    env: envParams
+  };
+
+  const rawRequestBody = JSON.stringify(parameters);
+
+  const signature = generateSignature(timestamp.toString(), 5000, rawRequestBody);
+
+  const headers = {
+    'X-BAPI-SIGN': signature,
+    'X-BAPI-API-KEY': BYBIT_API_KEY,
+    'X-BAPI-TIMESTAMP': timestamp,
+    'X-BAPI-RECV-WINDOW': 5000,
+    'Content-Type': 'application/json'
+  };
+
+  try {
+    const response = await axios.post(
+      `${BYBIT_API_URL}/v5/bybitpay/create_pay`,
+      parameters,
+      { headers }
+    )
+
+    console.log(response);
+    return response
+  } catch (error) {
+       if (axios.isAxiosError(error)) {
+        console.error('Bybit API Error:', error.response?.data);
+    } else {
+        console.error('Unexpected error:', error);
+    }
+    throw error;
   }
 };

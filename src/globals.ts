@@ -24,8 +24,12 @@ export const CRYPTOBOT_ID = process.env.CRYPTOBOT_ID || '';
 const ACTIVATOR_USERNAME = process.env.ACTIVATOR_USERNAME || '';
 const ACTIVATOR_TOKEN = process.env.ACTIVATOR_TOKEN || '';
 const KOKOS_API_URL = process.env.KOKOS_API_URL || '';
+export const BYBIT_API_URL = process.env.BYBIT_API_URL || '';
+export const BYBIT_API_KEY = process.env.BYBIT_API_KEY || '';
+export const BYBIT_SECRET = process.env.BYBIT_SECRET || '';
 const FRAGMENT_API_KEY = process.env.FRAGMENT_API_KEY || '';
 const FRAGMENT_API_URL = process.env.FRAGMENT_API_URL || '';
+const FRAGMENT_TOKEN = process.env.FRAGMENT_TOKEN || '';
 
 export const activatorApi = axios.create({
   baseURL: KOKOS_API_URL,
@@ -38,8 +42,9 @@ export const activatorApi = axios.create({
 export const fragmentApi = axios.create({
   baseURL: FRAGMENT_API_URL,
   headers: {
-    'X-Api-Key': FRAGMENT_API_KEY,
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+    Authorization: `JWT ${FRAGMENT_TOKEN}`
   }
 });
 

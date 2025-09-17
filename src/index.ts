@@ -4,7 +4,7 @@ import { Bot, InlineKeyboard, session, } from 'grammy';
 import { Order, SessionData, MyContext, Code } from './types.js';
 import { adminKeyboard, catalogKeyboard, categoryKeyboard, changeCredentialsKeyboard, cancelKeyboard, paymentMethodsKeyboard, productsManagementKeyboard, profileKeyboard, pubgKeyboard, returnKeyboard, starsKeyboard, telegramKeyboard, cryptobotKeyboard, manageAdminsKeyboard, adminReturnKeyboard, deleteProductListKeyboard, manageCodesKeyboard, manageCodesListKeyboard, toMenuKeyboard, depositKeyboard, orderRequestKeyboard, depositRequestKeyboard, languageKeyboard } from './keyboards.js';
 import { addCodes, ADMIN_CHAT_ID, createUser, deleteCodes, deletePendingChecks, DEPOSIT_GROUP_ID, getAdmins, getAllUsers, getCodes, getPaymentDetails, getPendingChecks, getStarsPrice, getUser, getUserBalance, getUserLanguage, initializeFirebaseData, refs, setAdmins, setPaymentDetails, setPendingCheck, setStarsPrice, setUserBalance, setUserLanguage, token } from './globals.js';
-import { currentProducts, getUserTag, handlePubgIdInput, isAdmin, processCryptoBotMessage, purchaseCodes, purchasePremium, purchaseStars, purchaseWithId, sendBroadcastMessage, sendDepositRequest, sendMainMessage, sendOrderRequest, sendUnusedCodes, setDefaultUserState, updateCartMessage, updateProducts } from './botUtils.js';
+import { createBybitPayment, currentProducts, getUserTag, handlePubgIdInput, isAdmin, processCryptoBotMessage, purchaseCodes, purchasePremium, purchaseStars, purchaseWithId, sendBroadcastMessage, sendDepositRequest, sendMainMessage, sendOrderRequest, sendUnusedCodes, setDefaultUserState, updateCartMessage, updateProducts } from './botUtils.js';
 import { useI18n } from './i18n.js';
 import en from './locales/en.js';
 import ru from './locales/ru.js';
@@ -806,6 +806,8 @@ bot.on('message', async (ctx) => {
           reply_markup: cancelKeyboard(chatId),
           parse_mode: 'HTML'
         });
+
+        const result = await createBybitPayment(chatId, amount)
 
         ctx.session.state = {
           type: 'awaiting_receipt',
