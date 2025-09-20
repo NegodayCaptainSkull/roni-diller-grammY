@@ -64,6 +64,7 @@ export default {
   payment_confirmed: '✅ Transaction {amount} {currency} confirmed\nID: {userId}\nNew balance: {balance}',
   balance_updated: '💳 Your balance has been topped up by {amount}$\nCurrent balance: {balance}$',
   deposit_instructions: '<b>➤ByBit UID - <code>{uid}</code> \n ▫️Send {amount}$ to the ID above, after payment send a screenshot!</b>',
+  cryptobot_instructions: 'Transfer money to Cryptobot as much as you want to add to your account',
   deposit_request_sent: 'Receipt received and sent to administrator for verification. Await confirmation.',
   new_deposit_request: '🆕 Balance top-up request\n👤 User: {userTag} (ID: {userId})\n💵 Amount: {amount}$\n📅 Time: {time}',
   deposit_confirmed: 'Top-up of {amount}$ for {userTag} (ID: {userId}) confirmed.',

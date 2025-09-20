@@ -238,7 +238,7 @@ export function paymentMethodsKeyboard (userId: string | number): InlineKeyboard
 export function cryptobotKeyboard (userId: string | number): InlineKeyboard {
   const t = getCurrentTranslations(userId);
   const keyboard = new InlineKeyboard()
-    .url(t.invoice_btn, getPaymentDetails().CryptoBot).row()
+    .url(t.invoice_btn, `${getPaymentDetails().CryptoBot}`).row()
     .text(t.cancel_btn, 'my-profile')
 
   return keyboard;

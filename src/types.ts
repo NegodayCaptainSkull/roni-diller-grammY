@@ -136,6 +136,7 @@ export interface ITranslations {
   payment_confirmed: string;
   balance_updated: string;
   deposit_instructions: string;
+  cryptobot_instructions: string;
   deposit_request_sent: string;
   new_deposit_request: string;
   deposit_confirmed: string;

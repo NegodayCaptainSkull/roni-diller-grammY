@@ -221,7 +221,7 @@ bot.on('callback_query:data', async (ctx) => {
       await ctx.api.editMessageMedia(chatId, messageId, {
         type: 'photo',
         media: IMAGES.amount,
-        caption: ctx.t('deposit_instructions', { uid: getPaymentDetails().ByBit, amount: '' }),
+        caption: ctx.t('cryptobot_instructions', { uid: getPaymentDetails().ByBit, amount: '' }),
         parse_mode: 'HTML'
       }, {
         reply_markup: cryptobotKeyboard(chatId)
