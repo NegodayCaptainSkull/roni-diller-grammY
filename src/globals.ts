@@ -101,7 +101,7 @@ export const setAdmins = async (newAdmins: Record<string, boolean>) => {
 
 export const setPaymentDetails = async (method: 'ByBit' | 'CryptoBot', newPaymentDetails: string) => {
   _paymentDetails[method] = newPaymentDetails;
-  await refs.paymentDetails.child(method).set(newPaymentDetails);
+  await refs.paymentDetails.set(_paymentDetails);
 };
 
 export const setProductsCodes = async (newProductsCodes: Product[]) => {
