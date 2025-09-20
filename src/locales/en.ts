@@ -24,6 +24,7 @@ export default {
   payment_not_found: '⚠️ No order found for transaction\nID: {paymentId}\nAmount: {amount} {currency}',
   code_not_exist: 'The code was not found',
   invalid_amount: 'You sent an incorrect amount',
+  invalid_stars_amount: 'You should buy at least 50 stars',
   invalid_price: 'Please enter a valid price',
   invalid_tag: 'Please send a real user tag starting with @',
   user_not_found: 'User with this ID doesn\'t exist',

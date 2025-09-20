@@ -1,7 +1,7 @@
 import admin from 'firebase-admin'
 import axios from 'axios';
 import { Code, CodesForProduct, CryptobotDeposit, PaymentDetails, PendingCheck, Product, User } from './types.js';
-import serviceAccount from '../secrets/serviceAccount.json' with { type: 'json' };
+import serviceAccount from '../secrets/serviceAccountKey.json' with { type: 'json' };
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -68,7 +68,6 @@ let _paymentDetails: PaymentDetails = {
   CryptoBot: 'http://t.me/send?start=IVGW3jJOOu59'
 };
 let _productsCodes: Product[] = [];
-let _productsId: Product[] = [];
 let _starsPrice: number = 0;
 let _productsPremium: Product[] = [];
 let _productsPromo: Product[] = [];
@@ -76,6 +75,8 @@ let _users: Record<string, User> = {};
 let _pendingChecks: Record<string, PendingCheck> = {};
 let _cryptobotDeposits: Record<string, CryptobotDeposit> = {};
 let _codes: Record<string, CodesForProduct> = {};
+
+let _isInitializing: boolean = true;
 
 export const getAdmins = () => _admins;
 export const getPaymentDetails = () => _paymentDetails;
@@ -89,7 +90,9 @@ export const getUserLanguage = (userId: string | number) => _users[userId].langu
 export const getAllUsers = () => _users;
 export const getPendingChecks = () => _pendingChecks;
 export const getCryptobotDeposits = () => _cryptobotDeposits;
-export const getCodes = (productLabel: string) => _codes[productLabel]
+export const getCodes = (productLabel: string) => _codes[productLabel] || {};
+
+export const isInitializing = () => _isInitializing;
 
 export const setAdmins = async (newAdmins: Record<string, boolean>) => {
   _admins = newAdmins;
@@ -248,7 +251,9 @@ export async function initializeFirebaseData(): Promise<void> {
     _codes = codesSnapshot.val() || {};
     
     console.log('✅ Firebase data initialized');
+    _isInitializing = false;
   } catch (error) {
+    _isInitializing = false;
     console.error('❌ Error initializing Firebase data:', error);
   }
 };

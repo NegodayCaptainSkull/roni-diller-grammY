@@ -1,21 +1,24 @@
 import express from 'express';
-import axios from 'axios';
 import { Bot, InlineKeyboard, session, } from 'grammy';
-import { Order, SessionData, MyContext, Code } from './types.js';
+import { Order, SessionData, MyContext } from './types.js';
 import { adminKeyboard, catalogKeyboard, categoryKeyboard, changeCredentialsKeyboard, cancelKeyboard, paymentMethodsKeyboard, productsManagementKeyboard, profileKeyboard, pubgKeyboard, returnKeyboard, starsKeyboard, telegramKeyboard, cryptobotKeyboard, manageAdminsKeyboard, adminReturnKeyboard, deleteProductListKeyboard, manageCodesKeyboard, manageCodesListKeyboard, toMenuKeyboard, depositKeyboard, orderRequestKeyboard, depositRequestKeyboard, languageKeyboard } from './keyboards.js';
-import { addCodes, ADMIN_CHAT_ID, createUser, deleteCodes, deletePendingChecks, DEPOSIT_GROUP_ID, getAdmins, getAllUsers, getCodes, getPaymentDetails, getPendingChecks, getStarsPrice, getUser, getUserBalance, getUserLanguage, initializeFirebaseData, refs, setAdmins, setPaymentDetails, setPendingCheck, setStarsPrice, setUserBalance, setUserLanguage, token } from './globals.js';
-import { createBybitPayment, currentProducts, getUserTag, handlePubgIdInput, isAdmin, processCryptoBotMessage, purchaseCodes, purchasePremium, purchaseStars, purchaseWithId, sendBroadcastMessage, sendDepositRequest, sendMainMessage, sendOrderRequest, sendUnusedCodes, setDefaultUserState, updateCartMessage, updateProducts } from './botUtils.js';
+import { addCodes, ADMIN_CHAT_ID, createUser, deleteCodes, deletePendingChecks, DEPOSIT_GROUP_ID, getAdmins, getAllUsers, getCodes, getPaymentDetails, getPendingChecks, getStarsPrice, getUser, getUserBalance, getUserLanguage, initializeFirebaseData, isInitializing, refs, setAdmins, setPaymentDetails, setPendingCheck, setStarsPrice, setUserBalance, setUserLanguage, token } from './globals.js';
+import { currentProducts, getUserTag, handlePubgIdInput, isAdmin, processCryptoBotMessage, purchaseCodes, purchasePremium, purchaseStars, purchaseWithId, sendBroadcastMessage, sendDepositRequest, sendMainMessage, sendOrderRequest, sendUnusedCodes, setDefaultUserState, updateCartMessage, updateProducts } from './botUtils.js';
 import { useI18n } from './i18n.js';
-import en from './locales/en.js';
-import ru from './locales/ru.js';
+import { getCurrentTranslations } from './locales/manager.js';
 
 const app = express();
 app.use(express.json());
 
 export const bot = new Bot<MyContext>(token);
 
-// Firebase configuration
-initializeFirebaseData()
+bot.use(async (ctx, next) => {
+  if (isInitializing()) {
+    await ctx.reply("Бот запускается, пожалуйста, подождите...");
+    return;
+  }
+  await next();
+});
 
 // Initialize session middleware
 bot.use(session({
@@ -186,8 +189,9 @@ bot.on('callback_query:data', async (ctx) => {
     else if (data.startsWith('set-lang_')) {
       const lang = data.split('_')[1] as 'ru' | 'en';
       await setUserLanguage(chatId, lang);
+      const t = getCurrentTranslations(chatId);
       await ctx.editMessageCaption({
-        caption: ctx.t('choose_language'),
+        caption: t.choose_language,
         reply_markup: languageKeyboard(chatId, lang)
       })
     }
@@ -631,8 +635,8 @@ bot.on('message', async (ctx) => {
       } else if (state.type === 'awaiting_stars_amount') {
         const starsAmount = parseInt(text);
 
-        if (isNaN(starsAmount)) {
-          await ctx.api.sendMessage(chatId, ctx.t('invalid_amount'), {
+        if (isNaN(starsAmount) || starsAmount < 50) {
+          await ctx.api.sendMessage(chatId, ctx.t('invalid_stars_amount'), {
             reply_markup: cancelKeyboard(chatId)
           });
 
@@ -806,8 +810,6 @@ bot.on('message', async (ctx) => {
           reply_markup: cancelKeyboard(chatId),
           parse_mode: 'HTML'
         });
-
-        const result = await createBybitPayment(chatId, amount)
 
         ctx.session.state = {
           type: 'awaiting_receipt',
@@ -1074,6 +1076,7 @@ bot.on('message', async (ctx) => {
 });
 
 const startBot = async () => {
+  await initializeFirebaseData();
   await bot.start({
     onStart: (botInfo) => {
       console.log(`Bot @${botInfo.username} is running on polling!`);

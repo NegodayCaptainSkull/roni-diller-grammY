@@ -28,7 +28,7 @@ export async function generateShopKeyboard(userId: string | number, cart: Cart |
   for (const p of prods) {
     let text = '';
     if (type === 'premium') {
-      text = `${p.label} - ${p.price}₽`;
+      text = `${p.label} - ${p.price}$`;
       keyboard.text(text, `buy-premium_${p.label}_${p.price}`).row();
     } else {
       const count = cart?.items.filter(item => item.label === p.label).length || 0;
@@ -38,13 +38,13 @@ export async function generateShopKeyboard(userId: string | number, cart: Cart |
           if (getCodes(p.label)) {
             available = Object.keys(getCodes(p.label)).length;
           }
-          text = `${p.label} - ${p.price}₽ (${count}/${available})`;
+          text = `${p.label} - ${p.price}$ (${count}/${available})`;
         } catch (error) {
           console.log(error)
-          text = `${p.label} - ${p.price}₽`;
+          text = `${p.label} - ${p.price}$`;
         }
       } else {
-        text = `${p.label} - ${p.price}₽`;
+        text = `${p.label} - ${p.price}$`;
       }
       keyboard.text(text, `add-to-cart_${p.label}_${p.price}_${type}`).row();
     }
@@ -69,7 +69,7 @@ export function productsManagementKeyboard (userId: string | number, category: s
   const keyboard = new InlineKeyboard();
 
   products.forEach(product => {
-    keyboard.text(`${product.label} - ${product.price}₽`, `edit-product_${category}_${product.label}`).row();
+    keyboard.text(`${product.label} - ${product.price}$`, `edit-product_${category}_${product.label}`).row();
   });
 
   keyboard

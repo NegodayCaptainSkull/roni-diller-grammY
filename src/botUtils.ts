@@ -280,7 +280,9 @@ export async function purchaseCodes(ctx: MyContext): Promise<void> {
   const messageId = ctx.msg!.message_id;
   const firstName = ctx.chat?.first_name || '';
   const lastName = ctx.chat?.last_name || '';
+  console.log("here1")
   const cart = ctx.session.cart;
+  console.log(cart)
   if (!cart || cart.items.length === 0) {
     await ctx.answerCallbackQuery({text: ctx.t('cart_empty')});
     return;

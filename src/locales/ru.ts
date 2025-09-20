@@ -24,6 +24,7 @@ export default {
   payment_not_found: '⚠️ Не найден заказ для перевода\nID: {paymentId}\nСумма: {amount} {currency}',
   code_not_exist: 'Код не найден',
   invalid_amount: 'Вы отправили некорректную сумму',
+  invalid_stars_amount: 'Вы можете сделать заказ начиная с 50 звезд',
   invalid_price: 'Пожалуйста, введите корректную цену',
   invalid_tag: 'Пришлите настоящий тег пользователя, начинающийся с @',
   user_not_found: 'Пользователя с таким id нет',

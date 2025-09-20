@@ -102,6 +102,7 @@ export interface ITranslations {
   payment_not_found: string;
   code_not_exist: string;
   invalid_amount: string;
+  invalid_stars_amount: string;
   invalid_price: string;
   invalid_tag: string;
   user_not_found: string;
