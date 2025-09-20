@@ -2,7 +2,7 @@ import express from 'express';
 import { Bot, InlineKeyboard, session, } from 'grammy';
 import { Order, SessionData, MyContext } from './types.js';
 import { adminKeyboard, catalogKeyboard, categoryKeyboard, changeCredentialsKeyboard, cancelKeyboard, paymentMethodsKeyboard, productsManagementKeyboard, profileKeyboard, pubgKeyboard, returnKeyboard, starsKeyboard, telegramKeyboard, cryptobotKeyboard, manageAdminsKeyboard, adminReturnKeyboard, deleteProductListKeyboard, manageCodesKeyboard, manageCodesListKeyboard, toMenuKeyboard, depositKeyboard, orderRequestKeyboard, depositRequestKeyboard, languageKeyboard } from './keyboards.js';
-import { addCodes, ADMIN_CHAT_ID, createUser, deleteCodes, deletePendingChecks, DEPOSIT_GROUP_ID, getAdmins, getAllUsers, getCodes, getPaymentDetails, getPendingChecks, getStarsPrice, getUser, getUserBalance, getUserLanguage, initializeFirebaseData, isInitializing, refs, setAdmins, setPaymentDetails, setPendingCheck, setStarsPrice, setUserBalance, setUserLanguage, token } from './globals.js';
+import { addCodes, ADMIN_CHAT_ID, createUser, deleteCodes, deletePendingChecks, DEPOSIT_GROUP_ID, getAdmins, getAllUsers, getCodes, getPaymentDetails, getPendingChecks, getStarsPrice, getUser, getUserBalance, getUserLanguage, initializeFirebaseData, isInitializing, refs, setAdmins, setCryptobotDeposit, setPaymentDetails, setPendingCheck, setStarsPrice, setUserBalance, setUserLanguage, token } from './globals.js';
 import { currentProducts, getUserTag, handlePubgIdInput, isAdmin, processCryptoBotMessage, purchaseCodes, purchasePremium, purchaseStars, purchaseWithId, sendBroadcastMessage, sendDepositRequest, sendMainMessage, sendOrderRequest, sendUnusedCodes, setDefaultUserState, updateCartMessage, updateProducts } from './botUtils.js';
 import { useI18n } from './i18n.js';
 import { getCurrentTranslations } from './locales/manager.js';
@@ -218,6 +218,18 @@ bot.on('callback_query:data', async (ctx) => {
       return;
     }
     else if (data === 'deposit-with-cryptobot') {
+      const firstName = ctx.chat?.first_name || '';
+      const lastName = ctx.chat?.last_name || '';
+      const fullName = `${firstName}${lastName ? ' ' + lastName : ''}`.trim();
+  
+      const cryptobotDeposit = {
+          userId: chatId,
+          messageId: messageId,
+          username: fullName
+      };
+
+      await setCryptobotDeposit(cryptobotDeposit);
+
       await ctx.api.editMessageMedia(chatId, messageId, {
         type: 'photo',
         media: IMAGES.amount,

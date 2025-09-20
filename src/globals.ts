@@ -150,7 +150,12 @@ export const setPendingCheck = async (userId: string | number, newPendingCheck: 
   await refs.pendingChecks.child(userId.toString()).set(newPendingCheck);
 };
 
-export const setCryptobotDeposits = async (newCryptobotDeposits: Record<string, CryptobotDeposit>) => {
+export const setCryptobotDeposit = async (newCryptobotDeposit: CryptobotDeposit) => {
+  _cryptobotDeposits[newCryptobotDeposit.userId] = newCryptobotDeposit;
+  await refs.cryptobotDeposits.child(newCryptobotDeposit.userId.toString()).set(newCryptobotDeposit);
+};
+
+const setCryptobotDeposits = async (newCryptobotDeposits: Record<string, CryptobotDeposit>) => {
   _cryptobotDeposits = newCryptobotDeposits;
   await refs.cryptobotDeposits.set(newCryptobotDeposits);
 };
