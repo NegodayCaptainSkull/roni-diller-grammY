@@ -675,10 +675,11 @@ bot.on('message', async (ctx) => {
               reply_markup: cancelKeyboard(chatId)
             });
 
-            userTag = tag.slice(1);
             return;
         };
-
+        
+        userTag = tag.slice(1);
+        
         const balance = getUserBalance(chatId);
         const starsPrice = getStarsPrice();
         const totalPrice = starsAmount * starsPrice;
